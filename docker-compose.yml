@@ -1,0 +1,15 @@
+# docker上でなにかインストールしたい場合
+# docker exec -it コンテナ名 sh -c "npm i 依存関係"
+services:
+  react-app:
+    container_name: reactclient
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./todo-client:/usr/src/app # ローカルをコンテナ内にマウント
+    command: sh -c "yarn start"
+    ports:
+      - "3000:3000"
+    stdin_open: true 
+  
