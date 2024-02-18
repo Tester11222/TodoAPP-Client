@@ -1,21 +1,41 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { useParams } from 'react-router-dom';
 import { sendEditTodo } from '../function/todoFunction';
 import { inputFormStyle } from '../../style/styleVariable';
+import APICONF from '../../conf/APIConfig';
 
 // 編集画面
 const EditTodo = () => {
   const { id } = useParams<{ id: string }>();
   const [todoContext, setTodoContext] = useState<string>("");
 
- 
+  // 入力値の保持のため。stateにTODO内容を取得してセットする
+  const selectTodoContextById = async () => {
+    try {
+      const response = await fetch(APICONF.BASE_ENDPOINT + id);
+
+      if (!response.ok) {
+        console.log(response)
+      }
+
+      const data = await response.json();
+      setTodoContext(data.todo_context)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    selectTodoContextById();
+  }, []);
+
   const callEdit = async () => {
     console.log(todoContext)
 
     // 編集が成功したら一覧に戻る
-    const numberTypeId:number = Number(id);
+    const numberTypeId: number = Number(id);
     const editIsSuccess = await sendEditTodo(numberTypeId, todoContext)
 
     if (editIsSuccess) {
@@ -36,8 +56,8 @@ const EditTodo = () => {
             style={inputFormStyle}
           />
         </div>
-          <Button variant='contained' color="secondary" onClick={callEdit}>UPDATE</Button>
-          <Button variant='contained' href="/">BACK</Button>
+        <Button variant='contained' color="secondary" onClick={callEdit}>UPDATE</Button>
+        <Button variant='contained' href="/">BACK</Button>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export const SelectTodo = () => {
     const { id } = useParams<{ id: string }>();
 
     // 選択
-    const selectTodoById = async (id: string) => {
+    const selectTodoById = async () => {
         try {
             const response = await fetch(APICONF.BASE_ENDPOINT + id);
 
@@ -28,7 +28,7 @@ export const SelectTodo = () => {
 
     // idがstringとして取得できない場合は空文字で
     useEffect(() => {
-        selectTodoById(id ?? "");
+        selectTodoById();
     }, []);
 
     return (
